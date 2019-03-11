@@ -1,13 +1,14 @@
-import {requireNativeComponent} from 'react-native';
+import React from 'react'
+import {Text, requireNativeComponent} from 'react-native';
 
-const { RNSelectableText } = requireNativeComponent('RNSelectableText');
+const RNSelectableText = requireNativeComponent('RNSelectableText');
 
-export const SelectableText = ({ ...props, onSelection }, forwardedRef) => {
+export const SelectableText = ({ onSelection, ...props }) => {
   const onSelectionNative = ({ nativeEvent: { content, eventType } })  => {
-    onSelection({ content, eventType })
+    onSelection && onSelection({ content, eventType })
   }
 
   return (
-    <RNSelectableText {...props} ref={forwardedRef} onSelection={onSelectionNative} />
+    <RNSelectableText {...props} onSelection={onSelectionNative} />
   )
 }
