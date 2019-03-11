@@ -1,6 +1,26 @@
 
 # react-native-selectable-text
 
+## Demo
+
+![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo.gif "React Native SelectableText")
+
+
+## Usage
+```javascript
+import { SelectableText } from 'react-native-selectable-text';
+
+// Use normally, it is a drop-in replacement for react-native/Text
+<SelectableText
+  menuItems={['Foo', 'Bar']}
+  /* Called when the user taps in a item of the selection menu, eventType is the label and content the selected text portion */
+  onSelection={({ eventType, content }) => {}}
+>
+  I crave star damage
+</SelectableText>
+```
+  
+
 ## Getting started
 
 `$ npm install react-native-selectable-text --save`
@@ -33,13 +53,3 @@
   	```
       compile project(':react-native-selectable-text')
   	```
-
-
-## Usage
-```javascript
-import RNSelectableText from 'react-native-selectable-text';
-
-// TODO: What to do with the module?
-RNSelectableText;
-```
-  
