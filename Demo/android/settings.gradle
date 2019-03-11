@@ -1,0 +1,6 @@
+rootProject.name = 'Demo'
+
+include ':app'
+include ':react-native-selectable-text'
+
+project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, '../../android')
