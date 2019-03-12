@@ -1,0 +1,24 @@
+diff --git a/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-dev.js b/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-dev.js
+index 8afedd6..c69cc92 100644
+--- a/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-dev.js
++++ b/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-dev.js
+@@ -4083,6 +4083,7 @@ function getChildHostContext(parentHostContext, type, rootContainerInstance) {
+     type === "RCTMultilineTextInputView" || // iOS
+     type === "RCTSinglelineTextInputView" || // iOS
+     type === "RCTText" ||
++    type === "RNSelectableText" ||
+     type === "RCTVirtualText";
+ 
+   if (prevIsInAParentText !== isInAParentText) {
+diff --git a/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-prod.js b/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-prod.js
+index ef16155..73cd962 100644
+--- a/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-prod.js
++++ b/node_modules/react-native/Libraries/Renderer/oss/ReactNativeRenderer-prod.js
+@@ -3057,6 +3057,7 @@ function pushHostContext(fiber) {
+     "RCTMultilineTextInputView" === nextContext ||
+     "RCTSinglelineTextInputView" === nextContext ||
+     "RCTText" === nextContext ||
++    "RNSelectableText" === nextContext ||
+     "RCTVirtualText" === nextContext;
+   nextContext =
+     context.isInAParentText !== nextContext
