@@ -1,11 +1,7 @@
 
-#if __has_include("RCTBridgeModule.h")
-#import "RCTBridgeModule.h"
-#else
-#import <React/RCTBridgeModule.h>
-#endif
+#import <RCTText/Text/RCTViewManager>
 
-@interface RNSelectableText : NSObject <RCTBridgeModule>
+@interface RNSelectableText : RCTViewManager
 
 @end
   

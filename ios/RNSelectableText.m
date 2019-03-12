@@ -1,13 +1,20 @@
+#import "RNCSliderManager.h"
 
+#import <React/RCTBridge.h>
+#import <React/RCTEventDispatcher.h>
 #import "RNSelectableText.h"
+#import <RCTText/RCTTextView.h>
 
 @implementation RNSelectableText
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
+
 RCT_EXPORT_MODULE()
+
+- void (RCTTextView *)view
+{
+    RCTTextView *selectableText = [RCTTextView new];
+    return selectableText;
+}
 
 @end
   
