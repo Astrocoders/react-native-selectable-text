@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3E7B58A1CC2AC0600A0062D /* RNSelectableText.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSelectableText.m */; };
+		B30B3B0F22399B3D001CD650 /* RNSelectableTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B30B3B0E22399B3D001CD650 /* RNSelectableTextView.m */; };
+		B3E7B58A1CC2AC0600A0062D /* RNSelectableTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNSelectableTextManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,8 +25,10 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNSelectableText.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSelectableText.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5881CC2AC0600A0062D /* RNSelectableText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSelectableText.h; sourceTree = "<group>"; };
-		B3E7B5891CC2AC0600A0062D /* RNSelectableText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSelectableText.m; sourceTree = "<group>"; };
+		B30B3B0E22399B3D001CD650 /* RNSelectableTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSelectableTextView.m; sourceTree = "<group>"; };
+		B30B3B1022399B88001CD650 /* RNSelectableTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSelectableTextView.h; sourceTree = "<group>"; };
+		B3E7B5881CC2AC0600A0062D /* RNSelectableTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSelectableTextManager.h; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* RNSelectableTextManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNSelectableTextManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,8 +53,10 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				B3E7B5881CC2AC0600A0062D /* RNSelectableText.h */,
-				B3E7B5891CC2AC0600A0062D /* RNSelectableText.m */,
+				B30B3B0E22399B3D001CD650 /* RNSelectableTextView.m */,
+				B30B3B1022399B88001CD650 /* RNSelectableTextView.h */,
+				B3E7B5881CC2AC0600A0062D /* RNSelectableTextManager.h */,
+				B3E7B5891CC2AC0600A0062D /* RNSelectableTextManager.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,9 +64,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		58B511DA1A9E6C8500147676 /* RNSelectableText */ = {
+		58B511DA1A9E6C8500147676 /* RNSelectableTextView */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSelectableText" */;
+			buildConfigurationList = 58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSelectableTextView" */;
 			buildPhases = (
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
@@ -71,7 +76,7 @@
 			);
 			dependencies = (
 			);
-			name = RNSelectableText;
+			name = RNSelectableTextView;
 			productName = RCTDataManager;
 			productReference = 134814201AA4EA6300B7C361 /* libRNSelectableText.a */;
 			productType = "com.apple.product-type.library.static";
@@ -91,7 +96,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableText" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableTextView" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -103,7 +108,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				58B511DA1A9E6C8500147676 /* RNSelectableText */,
+				58B511DA1A9E6C8500147676 /* RNSelectableTextView */,
 			);
 		};
 /* End PBXProject section */
@@ -113,7 +118,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3E7B58A1CC2AC0600A0062D /* RNSelectableText.m in Sources */,
+				B3E7B58A1CC2AC0600A0062D /* RNSelectableTextManager.m in Sources */,
+				B30B3B0F22399B3D001CD650 /* RNSelectableTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,9 +236,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNSelectableText;
+				PRODUCT_NAME = RNSelectableTextView;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "RNSelectableText-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "RNSelectableTextView-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 			};
@@ -251,9 +257,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = RNSelectableText;
+				PRODUCT_NAME = RNSelectableTextView;
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "RNSelectableText-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "RNSelectableTextView-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
@@ -261,7 +267,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableText" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableTextView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,
@@ -270,7 +276,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSelectableText" */ = {
+		58B511EF1A9E6C8500147676 /* Build configuration list for PBXNativeTarget "RNSelectableTextView" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511F01A9E6C8500147676 /* Debug */,
