@@ -10,6 +10,7 @@
 
 @implementation RNSelectableTextView {
     NSString* selectedText;
+    NSTextStorage *_Nullable _textStorage;
 }
 
 - (dispatch_queue_t) methodQueue
@@ -19,13 +20,20 @@
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
-    
     NSString *sel = NSStringFromSelector(action);
     NSRange match = [sel rangeOfString:@"_CUSTOM_SELECTOR_"];
     if (match.location == 0) {
         return YES;
     }
     return NO;
+}
+
+- (void)setTextStorage:(NSTextStorage *)textStorage
+          contentFrame:(CGRect)contentFrame
+       descendantViews:(NSArray<UIView *> *)descendantViews
+{
+    _textStorage = textStorage;
+    [super setTextStorage:textStorage contentFrame:contentFrame descendantViews:descendantViews];
 }
 
 - (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
@@ -57,11 +65,13 @@
     return YES;
 }
 
-- (void)tappedMenuItem:(NSString *)text {
+- (void)tappedMenuItem:(NSString *)eventType {
     self.onSelection(@{
-                       @"content": text,
-                       @"eventType": text
-                       });
+        @"content": [_textStorage string],
+        @"eventType": eventType,
+        @"selectionStart": @0,
+        @"selectionEnd": @0
+    });
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
