@@ -82,7 +82,7 @@ public class RNSelectableTextManager extends ReactTextViewManager {
                 String selectedText = view.getText().toString().substring(selectionStart, selectionEnd);
 
                 // Dispatch event
-                onSelectNativeEvent(view, menuItems[item.getItemId()], selectedText);
+                onSelectNativeEvent(view, menuItems[item.getItemId()], selectedText, selectionStart, selectionEnd);
 
                 mode.finish();
 
@@ -92,10 +92,12 @@ public class RNSelectableTextManager extends ReactTextViewManager {
         });
     }
 
-    public void onSelectNativeEvent(ReactTextView view, String eventType, String content) {
+    public void onSelectNativeEvent(ReactTextView view, String eventType, String content, int selectionStart, int selectionEnd) {
         WritableMap event = Arguments.createMap();
         event.putString("eventType", eventType);
         event.putString("content", content);
+        event.putInt("selectionStart", selectionStart);
+        event.putInt("selectionEnd", selectionEnd);
 
         // Dispatch
         ReactContext reactContext = (ReactContext) view.getContext();
