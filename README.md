@@ -20,6 +20,8 @@ import { SelectableText } from 'react-native-selectable-text';
   menuItems={['Foo', 'Bar']}
   /* Called when the user taps in a item of the selection menu, eventType is the label and content the selected text portion */
   onSelection={({ eventType, content }) => {}}
+  /* iOS only (RGB) */
+  highlightColor={[255, 0, 0]}
 >
   I crave star damage
 </SelectableText>
