@@ -3,8 +3,13 @@
 
 ## Demo
 
-![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo.gif "React Native SelectableText")
+### Android
 
+![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_android.gif "React Native SelectableText")
+
+### iOS
+
+![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_ios.gif "React Native SelectableText")
 
 ## Usage
 ```javascript
