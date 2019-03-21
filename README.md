@@ -30,11 +30,11 @@ import { SelectableText } from 'react-native-selectable-text';
 
 ## Getting started
 
-`$ npm install react-native-selectable-text --save`
+`$ npm install @astrocoders/react-native-selectable-text --save`
 
 ### Mostly automatic installation
 
-`$ react-native link react-native-selectable-text`
+`$ react-native link @astrocoders/react-native-selectable-text`
 
 ### Manual installation
 
