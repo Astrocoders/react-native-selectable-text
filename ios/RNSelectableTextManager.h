@@ -5,5 +5,6 @@
 
 @property (nonatomic, copy) RCTDirectEventBlock onSelection;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *menuItems;
+@property (nullable, nonatomic, copy) NSArray<NSNumber *> *highlightColor;
 
 @end

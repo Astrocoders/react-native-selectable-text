@@ -28,6 +28,7 @@ export default class App extends Component<Props> {
           menuItems={["Foo", "Bar"]}
           onSelection={console.log}
           style={styles.welcome}
+          highlightColor={[178, 236, 255]}
         >
           Welcome to React Native!
         </SelectableText>
@@ -36,6 +37,7 @@ export default class App extends Component<Props> {
           menuItems={["Astro", "Coders"]}
           onSelection={console.log}
           style={styles.instructions}
+          highlightColor={[178, 236, 255]}
         >
           To get started, edit App.js
         </SelectableText>
@@ -44,6 +46,7 @@ export default class App extends Component<Props> {
           menuItems={["Crave", "Star", "Damage"]}
           onSelection={console.log}
           style={styles.instructions}
+          highlightColor={[178, 236, 255]}
         >
           {instructions}
         </SelectableText>
