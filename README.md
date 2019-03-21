@@ -5,11 +5,11 @@
 
 ### Android
 
-![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_android.gif "React Native SelectableText")
+<img src="https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_android.gif" width="350px" />
 
 ### iOS
 
-![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_ios.gif "React Native SelectableText")
+<img src="https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_ios.gif" width="350px" />
 
 ## Usage
 ```javascript
