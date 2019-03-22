@@ -11,6 +11,8 @@
     RCTUITextView *_backedTextInputView;
 }
 
+NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
+
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
     if (self = [super initWithBridge:bridge]) {
@@ -73,7 +75,7 @@
     NSMutableArray *menuControllerItems = [NSMutableArray arrayWithCapacity:self.menuItems.count];
     
     for(NSString *menuItemName in self.menuItems) {
-        NSString *sel = [NSString stringWithFormat:@"_CUSTOM_SELECTOR_%@", menuItemName];
+        NSString *sel = [NSString stringWithFormat:@"%@%@", CUSTOM_SELECTOR, menuItemName];
         UIMenuItem *item = [[UIMenuItem alloc] initWithTitle: menuItemName
                                                       action: NSSelectorFromString(sel)];
         
@@ -155,7 +157,7 @@
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
     NSString *sel = NSStringFromSelector([invocation selector]);
-    NSRange match = [sel rangeOfString:@"_CUSTOM_SELECTOR_"];
+    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
     if (match.location == 0) {
         [self tappedMenuItem:[sel substringFromIndex:17]];
     } else {
@@ -171,7 +173,7 @@
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     NSString *sel = NSStringFromSelector(action);
-    NSRange match = [sel rangeOfString:@"_CUSTOM_SELECTOR_"];
+    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
 
     if (match.location == 0) {
         return YES;
