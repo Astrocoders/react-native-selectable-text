@@ -24,7 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libRNSelectableText.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNSelectableText.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libRNSelectableText.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libRNSelectableText.a; path = libRNSelectableTextView.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B30B3B0E22399B3D001CD650 /* RNSelectableTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNSelectableTextView.m; sourceTree = "<group>"; };
 		B30B3B1022399B88001CD650 /* RNSelectableTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNSelectableTextView.h; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNSelectableTextManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNSelectableTextManager.h; sourceTree = "<group>"; };
@@ -96,11 +96,12 @@
 					};
 				};
 			};
-			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableTextView" */;
+			buildConfigurationList = 58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableText" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 58B511D21A9E6C8500147676;
@@ -267,7 +268,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableTextView" */ = {
+		58B511D61A9E6C8500147676 /* Build configuration list for PBXProject "RNSelectableText" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				58B511ED1A9E6C8500147676 /* Debug */,

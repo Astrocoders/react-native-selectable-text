@@ -1,99 +1,148 @@
-//
-//  RNSelectableTextView.m
-//  RNSelectableText
-//
-//  Created by Gabriel R. Abreu on 13/03/19.
-//  Copyright © 2019 Facebook. All rights reserved.
-//
 
+#import <RCTText/RCTTextSelection.h>
+#import <RCTText/RCTUITextView.h>
 #import "RNSelectableTextView.h"
-#define RGB(r, g, b) [UIColor colorWithRed:(float)r/255.0 green:(float)g / 255.0 blue:(float)b / 255.0 alpha:1.0]
+#import <RCTText/RCTTextAttributes.h>
 
-@implementation RNSelectableTextView {
-    NSString* selectedText;
-    NSTextStorage *_Nullable _textStorage;
-    UILongPressGestureRecognizer* _gesture;
-}
+#import <React/RCTUtils.h>
 
-- (dispatch_queue_t) methodQueue
+@implementation RNSelectableTextView
 {
-    return dispatch_get_main_queue();
+    RCTUITextView *_backedTextInputView;
 }
 
-- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
+
+- (instancetype)initWithBridge:(RCTBridge *)bridge
 {
-    NSString *sel = NSStringFromSelector(action);
-    NSRange match = [sel rangeOfString:@"_CUSTOM_SELECTOR_"];
-    if (match.location == 0) {
-        return YES;
-    }
-    return NO;
-}
+    if (self = [super initWithBridge:bridge]) {
+        // `blurOnSubmit` defaults to `false` for <TextInput multiline={true}> by design.
+        self.blurOnSubmit = NO;
+        
+        _backedTextInputView = [[RCTUITextView alloc] initWithFrame:self.bounds];
+        _backedTextInputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _backedTextInputView.backgroundColor = [UIColor clearColor];
+        _backedTextInputView.textColor = [UIColor blackColor];
+        // This line actually removes 5pt (default value) left and right padding in UITextView.
+        _backedTextInputView.textContainer.lineFragmentPadding = 0;
+#if !TARGET_OS_TV
+        _backedTextInputView.scrollsToTop = NO;
+#endif
+        _backedTextInputView.scrollEnabled = NO;
+        _backedTextInputView.textInputDelegate = self;
+        _backedTextInputView.editable = NO;
+        _backedTextInputView.selectable = YES;
+        _backedTextInputView.contextMenuHidden = YES;
 
-- (void)setTextStorage:(NSTextStorage *)textStorage
-          contentFrame:(CGRect)contentFrame
-       descendantViews:(NSArray<UIView *> *)descendantViews
-{
-    _textStorage = textStorage;
-    [super setTextStorage:textStorage contentFrame:contentFrame descendantViews:descendantViews];
-}
-
-- (void)handleLongPress:(UILongPressGestureRecognizer *)gesture
-{    
-    if (!self.isFirstResponder) {
-        [self becomeFirstResponder];
+        for (UIGestureRecognizer *gesture in [_backedTextInputView gestureRecognizers]) {
+            if (
+                [gesture isKindOfClass:[UIPanGestureRecognizer class]]
+            ) {
+                [_backedTextInputView setExclusiveTouch:NO];
+                gesture.enabled = YES;
+            } else {
+                gesture.enabled = NO;
+            }
+        }
+        
+        [self addSubview:_backedTextInputView];
+        
+        UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
+        longPressGesture.minimumPressDuration = 0.15;
+        
+        UITapGestureRecognizer *tapGesture = [ [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        tapGesture.numberOfTapsRequired = 2;
+        
+        [_backedTextInputView addGestureRecognizer:longPressGesture];
+        [_backedTextInputView addGestureRecognizer:tapGesture];
+        
+        [self setUserInteractionEnabled:true];
     }
     
-    gesture.view.backgroundColor = RGB( [self.highlightColor[0] floatValue], [self.highlightColor[1] floatValue], [self.highlightColor[2] floatValue] );
+    return self;
+}
 
-    _gesture = gesture;
-
+-(void) _handleGesture
+{
+    if (!_backedTextInputView.isFirstResponder) {
+        [_backedTextInputView becomeFirstResponder];
+    }
+    
     UIMenuController *menuController = [UIMenuController sharedMenuController];
-
+    
     if (menuController.isMenuVisible) return;
-
+    
     NSMutableArray *menuControllerItems = [NSMutableArray arrayWithCapacity:self.menuItems.count];
-
+    
     for(NSString *menuItemName in self.menuItems) {
-        NSString *sel = [NSString stringWithFormat:@"_CUSTOM_SELECTOR_%@", menuItemName];
+        NSString *sel = [NSString stringWithFormat:@"%@%@", CUSTOM_SELECTOR, menuItemName];
         UIMenuItem *item = [[UIMenuItem alloc] initWithTitle: menuItemName
                                                       action: NSSelectorFromString(sel)];
-
+        
         [menuControllerItems addObject: item];
     }
-
+    
     menuController.menuItems = menuControllerItems;
     [menuController setTargetRect:self.bounds inView:self];
     [menuController setMenuVisible:YES animated:YES];
 }
 
-- (BOOL)becomeFirstResponder
+-(void) handleLongPress: (UILongPressGestureRecognizer *) gesture
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resignFirstResponder) name:UIMenuControllerDidHideMenuNotification object:nil];
-    return [super becomeFirstResponder];
+    CGPoint pos = [gesture locationInView:_backedTextInputView];
+    pos.y += _backedTextInputView.contentOffset.y;
+
+    UITextPosition *tapPos = [_backedTextInputView closestPositionToPoint:pos];
+    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:(UITextGranularityWord) inDirection:UITextLayoutDirectionRight];
+
+    UITextPosition* beginning = _backedTextInputView.beginningOfDocument;
+
+    UITextPosition *selectionStart = word.start;
+    UITextPosition *selectionEnd = word.end;
+
+    const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
+    const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
+
+    [_backedTextInputView select:self];
+    [_backedTextInputView setSelectedRange:NSMakeRange(location, endLocation - location)];
+    [self _handleGesture];
 }
 
-- (BOOL)resignFirstResponder
+-(void) handleTap: (UITapGestureRecognizer *) gesture
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIMenuControllerDidHideMenuNotification object:nil];
-    
-    _gesture.view.backgroundColor = nil;
-    
-    return [super resignFirstResponder];
+    [_backedTextInputView select:self];
+    [_backedTextInputView selectAll:self];
+    [self _handleGesture];
 }
 
-- (BOOL)canBecomeFirstResponder {
-    return YES;
+- (void)setAttributedText:(NSAttributedString *)attributedText
+{
+    if (self.value) {
+        NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.value attributes:self.textAttributes.effectiveTextAttributes];
+        
+        [super setAttributedText:str];
+    } else {
+        [super setAttributedText:attributedText];
+    }
 }
 
-- (void)tappedMenuItem:(NSString *)eventType {
-    NSAttributedString *attributedText = _textStorage;
+- (id<RCTBackedTextInputViewProtocol>)backedTextInputView
+{
+    return _backedTextInputView;
+}
+
+- (void)tappedMenuItem:(NSString *)eventType
+{
+    RCTTextSelection *selection = self.selection;
+    
+    NSUInteger start = selection.start;
+    NSUInteger end = selection.end - selection.start;
     
     self.onSelection(@{
-        @"content": [_textStorage string],
+        @"content": [[self.attributedText string] substringWithRange:NSMakeRange(start, end)],
         @"eventType": eventType,
-        @"selectionStart": @0,
-        @"selectionEnd": [NSNumber numberWithUnsignedInteger:attributedText.length]
+        @"selectionStart": @(start),
+        @"selectionEnd": @(selection.end)
     });
 }
 
@@ -108,12 +157,28 @@
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
     NSString *sel = NSStringFromSelector([invocation selector]);
-    NSRange match = [sel rangeOfString:@"_CUSTOM_SELECTOR_"];
+    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
     if (match.location == 0) {
         [self tappedMenuItem:[sel substringFromIndex:17]];
     } else {
         [super forwardInvocation:invocation];
     }
+}
+
+- (BOOL)canBecomeFirstResponder
+{
+    return YES;
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    NSString *sel = NSStringFromSelector(action);
+    NSRange match = [sel rangeOfString:CUSTOM_SELECTOR];
+
+    if (match.location == 0) {
+        return YES;
+    }
+    return NO;
 }
 
 @end

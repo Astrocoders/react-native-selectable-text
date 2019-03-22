@@ -1,10 +1,13 @@
-#import <UIKit/UIKit.h>
-#import <RCTText/RCTTextViewManager.h>
+#import <RCTText/RCTBaseTextInputViewManager.h>
 
-@interface RNSelectableTextManager : RCTTextViewManager
+NS_ASSUME_NONNULL_BEGIN
 
+@interface RNSelectableTextManager : RCTBaseTextInputViewManager
+
+@property (nonnull, nonatomic, copy) NSString *value;
 @property (nonatomic, copy) RCTDirectEventBlock onSelection;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *menuItems;
-@property (nullable, nonatomic, copy) NSArray<NSNumber *> *highlightColor;
 
 @end
+
+NS_ASSUME_NONNULL_END
