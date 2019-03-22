@@ -1,18 +1,13 @@
-//
-//  RNSelectableTextView.h
-//  RNSelectableText
-//
-//  Created by Gabriel R. Abreu on 13/03/19.
-//  Copyright © 2019 Facebook. All rights reserved.
-//
+#import <RCTText/RCTBaseTextInputView.h>
 
-#import <RCTText/RCTTextView.h>
-#import <React/RCTComponent.h>
+NS_ASSUME_NONNULL_BEGIN
 
-@interface RNSelectableTextView : RCTTextView;
+@interface RNSelectableTextView : RCTBaseTextInputView
 
+@property (nullable, nonatomic, copy) NSString *value;
 @property (nonatomic, copy) RCTDirectEventBlock onSelection;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *menuItems;
-@property (nullable, nonatomic, copy) NSArray<NSNumber *> *highlightColor;
 
 @end
+
+NS_ASSUME_NONNULL_END

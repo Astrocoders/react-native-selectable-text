@@ -1,25 +1,24 @@
-
-
-#import <React/RCTBridge.h>
-#import <React/RCTEventDispatcher.h>
-#import "RNSelectableTextManager.h"
 #import "RNSelectableTextView.h"
+#import "RNSelectableTextManager.h"
 
-@implementation RNSelectableTextManager {
-    RCTDirectEventBlock _onSelection;
-}
+@implementation RNSelectableTextManager
 
 RCT_EXPORT_MODULE()
 
-- (RNSelectableTextView *)view
+- (UIView *)view
 {
-    RNSelectableTextView *selectableText = [RNSelectableTextView new];
-    return selectableText;
+    RNSelectableTextView *selectable = [[RNSelectableTextView alloc] initWithBridge:self.bridge];
+    return selectable;
 }
 
 RCT_EXPORT_VIEW_PROPERTY(onSelection, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(menuItems, NSArray);
-RCT_EXPORT_VIEW_PROPERTY(highlightColor, NSArray);
+RCT_EXPORT_VIEW_PROPERTY(value, NSString);
+
+#pragma mark - Multiline <TextInput> (aka TextView) specific properties
+
+#if !TARGET_OS_TV
+RCT_REMAP_VIEW_PROPERTY(dataDetectorTypes, backedTextInputView.dataDetectorTypes, UIDataDetectorTypes)
+#endif
 
 @end
-  
