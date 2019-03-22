@@ -14,7 +14,7 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
   return Platform.OS === "ios" ? (
     <RNSelectableText
       {...props}
-      value={value}
+      value={children ? children : value}
       onSelection={onSelectionNative}
     />
   ) : (
