@@ -46,7 +46,7 @@
         [self addSubview:_backedTextInputView];
         
         UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-        longPressGesture.minimumPressDuration = 0.05;
+        longPressGesture.minimumPressDuration = 0.15;
         
         UITapGestureRecognizer *tapGesture = [ [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
         tapGesture.numberOfTapsRequired = 2;
@@ -62,7 +62,9 @@
 
 -(void) _handleGesture
 {
-    [_backedTextInputView selectAll:self];
+    if (!_backedTextInputView.isFirstResponder) {
+        [_backedTextInputView becomeFirstResponder];
+    }
     
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     
@@ -85,13 +87,34 @@
 
 -(void) handleLongPress: (UILongPressGestureRecognizer *) gesture
 {
+    CGPoint pos = [gesture locationInView:_backedTextInputView];
+    pos.y += _backedTextInputView.contentOffset.y;
+
+    UITextPosition *tapPos = [_backedTextInputView closestPositionToPoint:pos];
+    UITextRange *word = [_backedTextInputView.tokenizer rangeEnclosingPosition:tapPos withGranularity:(UITextGranularityWord) inDirection:UITextLayoutDirectionRight];
+
+    UITextPosition* beginning = _backedTextInputView.beginningOfDocument;
+
+    UITextPosition *selectionStart = word.start;
+    UITextPosition *selectionEnd = word.end;
+
+    const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
+    const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
+
+    [_backedTextInputView select:self];
+    [_backedTextInputView setSelectedRange:NSMakeRange(location, endLocation - location)];
+    [self _handleGesture];
+}
+
+-(void) handleTap: (UITapGestureRecognizer *) gesture
+{
+    [_backedTextInputView select:self];
+    [_backedTextInputView selectAll:self];
     [self _handleGesture];
 }
 
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
-    NSLog(@"value: %@", self.value);
-    
     if (self.value) {
         NSAttributedString *str = [[NSAttributedString alloc] initWithString:self.value attributes:self.textAttributes.effectiveTextAttributes];
         
@@ -99,11 +122,6 @@
     } else {
         [super setAttributedText:attributedText];
     }
-}
-
--(void) handleTap: (UITapGestureRecognizer *) gesture
-{
-    [self _handleGesture];
 }
 
 - (id<RCTBackedTextInputViewProtocol>)backedTextInputView
