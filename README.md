@@ -5,11 +5,11 @@
 
 ### Android
 
-![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_android.gif "React Native SelectableText")
+<img src="https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_android.gif" width="350px" />
 
 ### iOS
 
-![alt text](https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_ios.gif "React Native SelectableText")
+<img src="https://github.com/Astrocoders/react-native-selectable-text/raw/master/Demo/demo_ios.gif" width="350px" />
 
 ## Usage
 ```javascript
@@ -20,6 +20,8 @@ import { SelectableText } from 'react-native-selectable-text';
   menuItems={['Foo', 'Bar']}
   /* Called when the user taps in a item of the selection menu, eventType is the label and content the selected text portion */
   onSelection={({ eventType, content }) => {}}
+  /* iOS only (RGB) */
+  highlightColor={[255, 0, 0]}
 >
   I crave star damage
 </SelectableText>
@@ -28,11 +30,11 @@ import { SelectableText } from 'react-native-selectable-text';
 
 ## Getting started
 
-`$ npm install react-native-selectable-text --save`
+`$ npm install @astrocoders/react-native-selectable-text --save`
 
 ### Mostly automatic installation
 
-`$ react-native link react-native-selectable-text`
+`$ react-native link @astrocoders/react-native-selectable-text`
 
 ### Manual installation
 

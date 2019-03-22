@@ -1,6 +1,6 @@
 
 {
-  "name": "react-native-selectable-text",
+  "name": "@astrocoders/react-native-selectable-text",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
