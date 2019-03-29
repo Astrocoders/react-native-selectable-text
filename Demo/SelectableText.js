@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Text, requireNativeComponent } from "react-native";
 import { v4 } from "uuid";
 import memoize from "fast-memoize";
