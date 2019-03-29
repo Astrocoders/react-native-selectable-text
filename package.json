@@ -13,5 +13,9 @@
   "license": "MIT",
   "peerDependencies": {
     "react-native": "^0.41.2"
+  },
+  "dependencies": {
+    "fast-memoize": "^2.5.1",
+    "uuid": "^3.3.2"
   }
 }

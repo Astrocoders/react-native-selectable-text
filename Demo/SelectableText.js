@@ -1,8 +1,67 @@
 import React from "react";
-import { Text, requireNativeComponent, Platform } from "react-native";
+import PropTypes from "prop-types";
+import { Text, requireNativeComponent } from "react-native";
+import { v4 } from "uuid";
+import memoize from "fast-memoize";
 
 const RNSelectableText = requireNativeComponent("RNSelectableText");
 
+/**
+ * numbers: array({start: int, end: int, id: any})
+ */
+const combineHighlights = memoize(numbers => {
+  return numbers
+    .sort((a, b) => a.start - b.start || a.end - b.end)
+    .reduce(function(combined, next) {
+      if (!combined.length || combined[combined.length - 1].end < next.start)
+        combined.push(next);
+      else {
+        var prev = combined.pop();
+        combined.push({
+          start: prev.start,
+          end: Math.max(prev.end, next.end),
+          id: next.id
+        });
+      }
+      return combined;
+    }, []);
+});
+
+/**
+ * value: string
+ * highlights: array({start: int, end: int, id: any})
+ */
+const mapHighlightsRanges = memoize((value, highlights) => {
+  const combinedHighlights = combineHighlights(highlights);
+
+  if (combinedHighlights.length === 0)
+    return [{ isHighlight: false, text: value }];
+
+  return [
+    { isHighlight: false, text: value.slice(0, combinedHighlights[0].start) },
+    ...combinedHighlights.map(({ start, end }) => ({
+      isHighlight: true,
+      text: value.slice(start, end)
+    })),
+    {
+      isHighlight: false,
+      text: value.slice(
+        combinedHighlights[combinedHighlights.length - 1].end,
+        value.length
+      )
+    }
+  ];
+});
+
+/**
+ * Props
+ * ...TextProps
+ * onSelection: ({ content: string, eventType: string, selectionStart: int, selectionEnd: int }) => void
+ * children: ReactNode
+ * highlights: array({ id, start, end })
+ * highlightColor: string
+ * onHighlightPress: string => void
+ */
 export const SelectableText = ({ onSelection, value, children, ...props }) => {
   const onSelectionNative = ({
     nativeEvent: { content, eventType, selectionStart, selectionEnd }
@@ -11,15 +70,28 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
       onSelection({ content, eventType, selectionStart, selectionEnd });
   };
 
-  return Platform.OS === "ios" ? (
-    <RNSelectableText
-      {...props}
-      value={children ? children : value}
-      onSelection={onSelectionNative}
-    />
-  ) : (
+  return (
     <RNSelectableText {...props} onSelection={onSelectionNative}>
-      {children ? children : <Text>{value}</Text>}
+      <Text selectable>
+        {props.highlights && props.highlights.length > 0
+          ? mapHighlightsRanges(value, props.highlights).map(
+              ({ id, isHighlight, text }) => (
+                <Text
+                  key={v4()}
+                  selectable
+                  style={
+                    isHighlight ? { backgroundColor: props.highlightColor } : {}
+                  }
+                  onPress={() =>
+                    props.onHighlightPress && props.onHighlightPress(id)
+                  }
+                >
+                  {text}{" "}
+                </Text>
+              )
+            )
+          : value}
+      </Text>
     </RNSelectableText>
   );
 };
