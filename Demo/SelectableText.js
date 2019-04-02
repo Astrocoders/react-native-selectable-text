@@ -36,21 +36,33 @@ const mapHighlightsRanges = memoize((value, highlights) => {
   if (combinedHighlights.length === 0)
     return [{ isHighlight: false, text: value }]
 
-  return [
+  const data = [
     { isHighlight: false, text: value.slice(0, combinedHighlights[0].start) },
-    ...combinedHighlights.map(({ id, start, end }) => ({
-      id,
+  ]
+
+  combinedHighlights.forEach(({ start, end }, idx) => {
+    data.push({
       isHighlight: true,
       text: value.slice(start, end),
-    })),
-    {
-      isHighlight: false,
-      text: value.slice(
-        combinedHighlights[combinedHighlights.length - 1].end,
-        value.length
-      ),
-    },
-  ]
+    })
+
+    if (combinedHighlights[idx + 1]) {
+      data.push({
+        isHighlight: false,
+        text: value.slice(end, combinedHighlights[idx + 1].start),
+      })
+    }
+  })
+
+  data.push({
+    isHighlight: false,
+    text: value.slice(
+      combinedHighlights[combinedHighlights.length - 1].end,
+      value.length
+    ),
+  })
+
+  return data.filter(x => x.text)
 })
 
 /**
@@ -72,7 +84,7 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
 
   return (
     <RNSelectableText {...props} selectable onSelection={onSelectionNative}>
-      <Text selectable>
+      <Text selectable key={v4()}>
         {props.highlights && props.highlights.length > 0
           ? mapHighlightsRanges(value, props.highlights).map(
               ({ id, isHighlight, text }) => (
