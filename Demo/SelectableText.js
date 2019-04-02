@@ -93,9 +93,11 @@ export const SelectableText = ({
       ? ({ nativeEvent: { clickedRangeStart, clickedRangeEnd } }) => {
           if (!props.highlights || props.highlights.length === 0) return
 
-          const hightlightInRange = props.highlights.find(
+          const mergedHighlights = combineHighlights(props.highlights)
+
+          const hightlightInRange = mergedHighlights.find(
             ({ start, end }) =>
-              clickedRangeStart >= start && clickedRangeEnd <= end
+              clickedRangeStart >= start - 1 && clickedRangeEnd <= end + 1
           )
 
           if (hightlightInRange) {
