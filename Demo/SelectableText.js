@@ -1,56 +1,57 @@
-import React from "react";
-import { Text, requireNativeComponent } from "react-native";
-import { v4 } from "uuid";
-import memoize from "fast-memoize";
+import React from 'react'
+import { Text, requireNativeComponent } from 'react-native'
+import { v4 } from 'uuid'
+import memoize from 'fast-memoize'
 
-const RNSelectableText = requireNativeComponent("RNSelectableText");
+const RNSelectableText = requireNativeComponent('RNSelectableText')
 
 /**
- * numbers: array({start: int, end: int, id: any})
+ * numbers: array({start: int, end: int, id: string})
  */
 const combineHighlights = memoize(numbers => {
   return numbers
     .sort((a, b) => a.start - b.start || a.end - b.end)
     .reduce(function(combined, next) {
       if (!combined.length || combined[combined.length - 1].end < next.start)
-        combined.push(next);
+        combined.push(next)
       else {
-        var prev = combined.pop();
+        var prev = combined.pop()
         combined.push({
           start: prev.start,
           end: Math.max(prev.end, next.end),
-          id: next.id
-        });
+          id: next.id,
+        })
       }
-      return combined;
-    }, []);
-});
+      return combined
+    }, [])
+})
 
 /**
  * value: string
  * highlights: array({start: int, end: int, id: any})
  */
 const mapHighlightsRanges = memoize((value, highlights) => {
-  const combinedHighlights = combineHighlights(highlights);
+  const combinedHighlights = combineHighlights(highlights)
 
   if (combinedHighlights.length === 0)
-    return [{ isHighlight: false, text: value }];
+    return [{ isHighlight: false, text: value }]
 
   return [
     { isHighlight: false, text: value.slice(0, combinedHighlights[0].start) },
-    ...combinedHighlights.map(({ start, end }) => ({
+    ...combinedHighlights.map(({ id, start, end }) => ({
+      id,
       isHighlight: true,
-      text: value.slice(start, end)
+      text: value.slice(start, end),
     })),
     {
       isHighlight: false,
       text: value.slice(
         combinedHighlights[combinedHighlights.length - 1].end,
         value.length
-      )
-    }
-  ];
-});
+      ),
+    },
+  ]
+})
 
 /**
  * Props
@@ -63,14 +64,14 @@ const mapHighlightsRanges = memoize((value, highlights) => {
  */
 export const SelectableText = ({ onSelection, value, children, ...props }) => {
   const onSelectionNative = ({
-    nativeEvent: { content, eventType, selectionStart, selectionEnd }
+    nativeEvent: { content, eventType, selectionStart, selectionEnd },
   }) => {
     onSelection &&
-      onSelection({ content, eventType, selectionStart, selectionEnd });
-  };
+      onSelection({ content, eventType, selectionStart, selectionEnd })
+  }
 
   return (
-    <RNSelectableText {...props} onSelection={onSelectionNative}>
+    <RNSelectableText {...props} selectable onSelection={onSelectionNative}>
       <Text selectable>
         {props.highlights && props.highlights.length > 0
           ? mapHighlightsRanges(value, props.highlights).map(
@@ -82,15 +83,17 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
                     isHighlight ? { backgroundColor: props.highlightColor } : {}
                   }
                   onPress={() =>
-                    props.onHighlightPress && props.onHighlightPress(id)
+                    isHighlight &&
+                    props.onHighlightPress &&
+                    props.onHighlightPress(id)
                   }
                 >
-                  {text}{" "}
+                  {text}{' '}
                 </Text>
               )
             )
           : value}
       </Text>
     </RNSelectableText>
-  );
-};
+  )
+}
