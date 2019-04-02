@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, requireNativeComponent } from 'react-native'
+import { Text, requireNativeComponent, Platform } from 'react-native'
 import { v4 } from 'uuid'
 import memoize from 'fast-memoize'
 
@@ -74,7 +74,13 @@ const mapHighlightsRanges = (value, highlights) => {
  * highlightColor: string
  * onHighlightPress: string => void
  */
-export const SelectableText = ({ onSelection, value, children, ...props }) => {
+export const SelectableText = ({
+  onSelection,
+  onHighlightPress,
+  value,
+  children,
+  ...props
+}) => {
   const onSelectionNative = ({
     nativeEvent: { content, eventType, selectionStart, selectionEnd },
   }) => {
@@ -82,8 +88,30 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
       onSelection({ content, eventType, selectionStart, selectionEnd })
   }
 
+  const onHighlightPressNative = onHighlightPress
+    ? Platform.OS === 'ios'
+      ? ({ nativeEvent: { clickedRangeStart, clickedRangeEnd } }) => {
+          if (!props.highlights || props.highlights.length === 0) return
+
+          const hightlightInRange = props.highlights.find(
+            ({ start, end }) =>
+              clickedRangeStart >= start && clickedRangeEnd <= end
+          )
+
+          if (hightlightInRange) {
+            onHighlightPress(hightlightInRange.id)
+          }
+        }
+      : onHighlightPress
+    : () => {}
+
   return (
-    <RNSelectableText {...props} selectable onSelection={onSelectionNative}>
+    <RNSelectableText
+      {...props}
+      onHighlightPress={onHighlightPressNative}
+      selectable
+      onSelection={onSelectionNative}
+    >
       <Text selectable key={v4()}>
         {props.highlights && props.highlights.length > 0
           ? mapHighlightsRanges(value, props.highlights).map(
@@ -92,13 +120,17 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
                   key={v4()}
                   selectable
                   style={
-                    isHighlight ? { backgroundColor: props.highlightColor } : {}
+                    isHighlight
+                      ? {
+                          backgroundColor: props.highlightColor,
+                        }
+                      : {}
                   }
-                  onPress={() =>
-                    isHighlight &&
-                    props.onHighlightPress &&
-                    props.onHighlightPress(id)
-                  }
+                  onPress={() => {
+                    if (isHighlight) {
+                      onHighlightPress && onHighlightPress(id)
+                    }
+                  }}
                 >
                   {text}{' '}
                 </Text>
