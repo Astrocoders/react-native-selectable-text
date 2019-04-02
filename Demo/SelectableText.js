@@ -18,8 +18,8 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
       onSelection={onSelectionNative}
     />
   ) : (
-    <RNSelectableText {...props} onSelection={onSelectionNative}>
-      {children ? children : <Text>{value}</Text>}
+    <RNSelectableText {...props} selectable onSelection={onSelectionNative}>
+      {children ? children : <Text selectable>{value}</Text>}
     </RNSelectableText>
   );
 };
