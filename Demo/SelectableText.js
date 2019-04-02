@@ -30,7 +30,7 @@ const combineHighlights = memoize(numbers => {
  * value: string
  * highlights: array({start: int, end: int, id: any})
  */
-const mapHighlightsRanges = memoize((value, highlights) => {
+const mapHighlightsRanges = (value, highlights) => {
   const combinedHighlights = combineHighlights(highlights)
 
   if (combinedHighlights.length === 0)
@@ -63,7 +63,7 @@ const mapHighlightsRanges = memoize((value, highlights) => {
   })
 
   return data.filter(x => x.text)
-})
+}
 
 /**
  * Props
@@ -105,6 +105,7 @@ export const SelectableText = ({ onSelection, value, children, ...props }) => {
               )
             )
           : value}
+        {props.appendToChildren ? props.appendToChildren : null}
       </Text>
     </RNSelectableText>
   )
