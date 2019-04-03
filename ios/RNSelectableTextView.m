@@ -59,9 +59,9 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         [_backedTextInputView addGestureRecognizer:tapGesture];
         [_backedTextInputView addGestureRecognizer:singleTapGesture];
         
-        [self setUserInteractionEnabled:true];
+        [self setUserInteractionEnabled:YES];
     }
-    
+
     return self;
 }
 
@@ -169,6 +169,8 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         @"selectionStart": @(start),
         @"selectionEnd": @(selection.end)
     });
+    
+    [_backedTextInputView setSelectedTextRange:nil notifyDelegate:false];
 }
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
@@ -204,6 +206,12 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         return YES;
     }
     return NO;
+}
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
+    return [super hitTest:point withEvent:event];
 }
 
 @end
