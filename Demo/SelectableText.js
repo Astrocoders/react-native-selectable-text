@@ -134,7 +134,7 @@ export const SelectableText = ({
                     }
                   }}
                 >
-                  {text}{' '}
+                  {text}
                 </Text>
               )
             )
