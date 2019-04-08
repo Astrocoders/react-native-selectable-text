@@ -12,8 +12,7 @@ const combineHighlights = memoize(numbers => {
   return numbers
     .sort((a, b) => a.start - b.start || a.end - b.end)
     .reduce(function(combined, next) {
-      if (!combined.length || combined[combined.length - 1].end < next.start)
-        combined.push(next)
+      if (!combined.length || combined[combined.length - 1].end < next.start) combined.push(next)
       else {
         var prev = combined.pop()
         combined.push({
@@ -33,12 +32,9 @@ const combineHighlights = memoize(numbers => {
 const mapHighlightsRanges = (value, highlights) => {
   const combinedHighlights = combineHighlights(highlights)
 
-  if (combinedHighlights.length === 0)
-    return [{ isHighlight: false, text: value }]
+  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value }]
 
-  const data = [
-    { isHighlight: false, text: value.slice(0, combinedHighlights[0].start) },
-  ]
+  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start) }]
 
   combinedHighlights.forEach(({ start, end }, idx) => {
     data.push({
@@ -56,10 +52,7 @@ const mapHighlightsRanges = (value, highlights) => {
 
   data.push({
     isHighlight: false,
-    text: value.slice(
-      combinedHighlights[combinedHighlights.length - 1].end,
-      value.length
-    ),
+    text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
   })
 
   return data.filter(x => x.text)
@@ -74,18 +67,11 @@ const mapHighlightsRanges = (value, highlights) => {
  * highlightColor: string
  * onHighlightPress: string => void
  */
-export const SelectableText = ({
-  onSelection,
-  onHighlightPress,
-  value,
-  children,
-  ...props
-}) => {
+export const SelectableText = ({ onSelection, onHighlightPress, value, children, ...props }) => {
   const onSelectionNative = ({
     nativeEvent: { content, eventType, selectionStart, selectionEnd },
   }) => {
-    onSelection &&
-      onSelection({ content, eventType, selectionStart, selectionEnd })
+    onSelection && onSelection({ content, eventType, selectionStart, selectionEnd })
   }
 
   const onHighlightPressNative = onHighlightPress
@@ -96,8 +82,7 @@ export const SelectableText = ({
           const mergedHighlights = combineHighlights(props.highlights)
 
           const hightlightInRange = mergedHighlights.find(
-            ({ start, end }) =>
-              clickedRangeStart >= start - 1 && clickedRangeEnd <= end + 1
+            ({ start, end }) => clickedRangeStart >= start - 1 && clickedRangeEnd <= end + 1,
           )
 
           if (hightlightInRange) {
@@ -116,28 +101,26 @@ export const SelectableText = ({
     >
       <Text selectable key={v4()}>
         {props.highlights && props.highlights.length > 0
-          ? mapHighlightsRanges(value, props.highlights).map(
-              ({ id, isHighlight, text }) => (
-                <Text
-                  key={v4()}
-                  selectable
-                  style={
-                    isHighlight
-                      ? {
-                          backgroundColor: props.highlightColor,
-                        }
-                      : {}
+          ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
+              <Text
+                key={v4()}
+                selectable
+                style={
+                  isHighlight
+                    ? {
+                        backgroundColor: props.highlightColor,
+                      }
+                    : {}
+                }
+                onPress={() => {
+                  if (isHighlight) {
+                    onHighlightPress && onHighlightPress(id)
                   }
-                  onPress={() => {
-                    if (isHighlight) {
-                      onHighlightPress && onHighlightPress(id)
-                    }
-                  }}
-                >
-                  {text}
-                </Text>
-              )
-            )
+                }}
+              >
+                {text}
+              </Text>
+            ))
           : value}
         {props.appendToChildren ? props.appendToChildren : null}
       </Text>
