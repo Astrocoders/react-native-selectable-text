@@ -1,3 +1,4 @@
+
 # react-native-selectable-text
 
 ## Demo
@@ -43,7 +44,7 @@ import { SelectableText } from "react-native-selectable-text";
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-selectable-text` and add `RNSelectableText.xcodeproj`
+2. Go to `node_modules` ➜ `@astrocoders/react-native-selectable-text` and add `RNSelectableText.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNSelectableText.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
 
@@ -57,9 +58,21 @@ import { SelectableText } from "react-native-selectable-text";
 2. Append the following lines to `android/settings.gradle`:
    ```
    include ':react-native-selectable-text'
-   project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-selectable-text/android')
+   project(':react-native-selectable-text').projectDir = new File(rootProject.projectDir, 	'../node_modules/@astrocoders/react-native-selectable-text/android')
    ```
 3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
    ```
      compile project(':react-native-selectable-text')
    ```
+
+## Props
+| name | description | type | default |
+|--|--|--|--|
+| **value** | text content | string | "" |
+| **onSelection** | Called when the user taps in a item of the selection menu | ({ eventType: string, content: string, selectionStart: int, selectionEnd: int }) => void | () => {} |
+| **menuItems** | context menu items | array(string) | [] |
+| **style** | additional styles to be applied to text | Object | null |
+| **highlights** | array of text ranges that should be highlighted with an optional id | array({ id: string, start: int, end: int }) | [] |
+| **highlightColor** | highlight color |string | null |
+| **onHighlightPress** | called when the user taps the highlight  |(id: string) => void | () => {} |
+| **appendToChildren** | element to be added in the last line of text | ReactNode | null |
