@@ -15,6 +15,7 @@ RCT_EXPORT_VIEW_PROPERTY(onSelection, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(menuItems, NSArray);
 RCT_EXPORT_VIEW_PROPERTY(value, NSString);
 RCT_EXPORT_VIEW_PROPERTY(onHighlightPress, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(highlights, NSArray)
 
 #pragma mark - Multiline <TextInput> (aka TextView) specific properties
 

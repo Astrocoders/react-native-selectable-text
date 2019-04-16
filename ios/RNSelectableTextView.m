@@ -48,7 +48,8 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         [self addSubview:_backedTextInputView];
         
         UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-        
+        longPressGesture.minimumPressDuration = 0.25;
+
         UITapGestureRecognizer *tapGesture = [ [UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
         tapGesture.numberOfTapsRequired = 2;
         
@@ -70,6 +71,32 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
     if (!_backedTextInputView.isFirstResponder) {
         [_backedTextInputView becomeFirstResponder];
     }
+
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    
+    if (menuController.isMenuVisible) return;
+
+    NSMutableArray *menuControllerItems = [NSMutableArray arrayWithCapacity:self.menuItems.count];
+    
+    for(NSString *menuItemName in self.menuItems) {
+        NSString *sel = [NSString stringWithFormat:@"%@%@", CUSTOM_SELECTOR, menuItemName];
+        UIMenuItem *item = [[UIMenuItem alloc] initWithTitle: menuItemName
+                                                      action: NSSelectorFromString(sel)];
+        
+        [menuControllerItems addObject: item];
+    }
+    
+    menuController.menuItems = menuControllerItems;
+
+    [menuController setTargetRect:self.bounds inView:self];
+    [menuController setMenuVisible:YES animated:YES];
+}
+
+- (void) _handleHighlightGesture
+{
+    if (!_backedTextInputView.isFirstResponder) {
+        [_backedTextInputView becomeFirstResponder];
+    }
     
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     
@@ -82,6 +109,12 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         UIMenuItem *item = [[UIMenuItem alloc] initWithTitle: menuItemName
                                                       action: NSSelectorFromString(sel)];
         
+        if ([menuItemName isEqualToString:@"Marcar"]) {
+            sel = [NSString stringWithFormat:@"%@%@", CUSTOM_SELECTOR, @"Desmarcar"];
+            item = [[UIMenuItem alloc] initWithTitle: @"Desmarcar"
+                                              action: NSSelectorFromString(sel)];
+        }
+        
         [menuControllerItems addObject: item];
     }
     
@@ -92,6 +125,9 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
 
 -(void) handleSingleTap: (UITapGestureRecognizer *) gesture
 {
+    UIMenuController *menuController = [UIMenuController sharedMenuController];
+    [menuController setMenuVisible:false];
+    
     CGPoint pos = [gesture locationInView:_backedTextInputView];
     pos.y += _backedTextInputView.contentOffset.y;
     
@@ -101,15 +137,20 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
     UITextPosition* beginning = _backedTextInputView.beginningOfDocument;
     
     UITextPosition *selectionStart = word.start;
-    UITextPosition *selectionEnd = word.end;
     
     const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
-    const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
     
-    self.onHighlightPress(@{
-        @"clickedRangeStart": @(location),
-        @"clickedRangeEnd": @(endLocation),
-    });
+    for (NSDictionary *cur in _highlights) {
+        NSInteger selectionStart = [[cur objectForKey:@"start"] integerValue];
+        NSInteger selectionEnd = [[cur objectForKey:@"end"] integerValue];
+        
+        if (location >= selectionStart && location <= selectionEnd) {
+            [_backedTextInputView select:self];
+            [_backedTextInputView setSelectedRange:NSMakeRange(selectionStart, selectionEnd - selectionStart)];
+            [self _handleHighlightGesture];
+            break;
+        }
+    }
 }
 
 -(void) handleLongPress: (UILongPressGestureRecognizer *) gesture
@@ -163,11 +204,14 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
     NSUInteger start = selection.start;
     NSUInteger end = selection.end - selection.start;
     
+    NSString *highlightId = [self getHighlightFromRange:selection.start withEnd:selection.end];
+    
     self.onSelection(@{
         @"content": [[self.attributedText string] substringWithRange:NSMakeRange(start, end)],
         @"eventType": eventType,
         @"selectionStart": @(start),
-        @"selectionEnd": @(selection.end)
+        @"selectionEnd": @(selection.end),
+        @"highlightId": highlightId
     });
     
     [_backedTextInputView setSelectedTextRange:nil notifyDelegate:false];
@@ -212,6 +256,23 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
 {
     [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
     return [super hitTest:point withEvent:event];
+}
+
+- (NSString *) getHighlightFromRange: (NSInteger) start withEnd:(NSInteger) end
+{
+    NSString *highlightId = @"";
+    
+    for (NSDictionary *cur in _highlights) {
+        NSInteger highlightStart = [[cur objectForKey:@"start"] integerValue];
+        NSInteger highlightEnd = [[cur objectForKey:@"end"] integerValue];
+        
+        if (highlightStart == start && highlightEnd == end) {
+            highlightId = [cur objectForKey:@"id"];
+            break;
+        }
+    }
+    
+    return highlightId;
 }
 
 @end

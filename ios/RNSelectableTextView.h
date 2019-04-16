@@ -8,6 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) RCTDirectEventBlock onSelection;
 @property (nullable, nonatomic, copy) NSArray<NSString *> *menuItems;
 @property (nonatomic, copy) RCTDirectEventBlock onHighlightPress;
+@property (nullable, nonatomic, copy) NSArray<NSDictionary *> *highlights;
 
 @end
 
