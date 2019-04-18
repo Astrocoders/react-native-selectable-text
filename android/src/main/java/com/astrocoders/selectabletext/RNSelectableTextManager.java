@@ -1,14 +1,11 @@
 package com.astrocoders.selectabletext;
 
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ActionMode;
 import android.view.ActionMode.Callback;
-import android.text.Selection;
 import android.view.MotionEvent;
 import android.text.Spannable;
 import android.widget.TextView;
