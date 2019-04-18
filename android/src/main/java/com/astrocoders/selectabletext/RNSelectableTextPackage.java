@@ -1,5 +1,3 @@
-
-
 package com.astrocoders.selectabletext;
 
 import java.util.Arrays;
