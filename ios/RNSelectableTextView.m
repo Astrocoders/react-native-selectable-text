@@ -128,6 +128,8 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
     const NSInteger location = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionStart];
     const NSInteger endLocation = [_backedTextInputView offsetFromPosition:beginning toPosition:selectionEnd];
 
+    if (location == 0 && endLocation == 0) return;
+
     [_backedTextInputView select:self];
     [_backedTextInputView setSelectedRange:NSMakeRange(location, endLocation - location)];
     [self _handleGesture];
