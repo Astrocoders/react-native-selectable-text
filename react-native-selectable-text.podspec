@@ -15,23 +15,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Astrocoders/react-native-selectable-text.git", :tag => "#{s.version}" }
   s.source_files  = "ios/**/*.{h,m}"
 
-  # React is split into a set of subspecs, these are the essentials
-  s.dependency 'React/Core'
-  s.dependency 'React/CxxBridge'
-  s.dependency 'React/RCTAnimation'
-  s.dependency 'React/RCTImage'
-  s.dependency 'React/RCTLinkingIOS'
-  s.dependency 'React/RCTNetwork'
-  s.dependency 'React/RCTText'
-
-  # React's dependencies
-  podspecs = [
-    'node_modules/react-native/third-party-podspecs/DoubleConversion.podspec',
-    'node_modules/react-native/third-party-podspecs/Folly.podspec',
-    'node_modules/react-native/third-party-podspecs/glog.podspec'
-  ]
-  podspecs.each do |podspec_path|
-    spec = Pod::Specification.from_file podspec_path
-    s.dependency spec.name, "#{spec.version}"
-  end
+  s.dependency 'React'
 end
