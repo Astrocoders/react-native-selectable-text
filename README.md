@@ -41,12 +41,17 @@ import { SelectableText } from "react-native-selectable-text";
 
 ### Manual installation
 
-#### iOS
+#### iOS - Binary Linking (Alternative 1)
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
 2. Go to `node_modules` ➜ `@astrocoders/react-native-selectable-text` and add `RNSelectableText.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRNSelectableText.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. Run your project (`Cmd+R`)<
+
+#### iOS - Pods (Alternative 2)
+
+1. Add `pod 'RNSelectableText', :path => '../node_modules/@astrocoders/react-native-selectable-text/ios/RNSelectableText.podspec'` to your projects podfile
+2. run `pod install`
 
 #### Android
 
