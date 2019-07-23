@@ -1,8 +1,22 @@
-
+#if __has_include(<RCTText/RCTTextSelection.h>)
 #import <RCTText/RCTTextSelection.h>
+#else
+#import "RCTTextSelection.h"
+#endif
+
+#if __has_include(<RCTText/RCTUITextView.h>)
 #import <RCTText/RCTUITextView.h>
+#else
+#import "RCTUITextView.h"
+#endif
+
 #import "RNSelectableTextView.h"
+
+#if __has_include(<RCTText/RCTTextAttributes.h>)
 #import <RCTText/RCTTextAttributes.h>
+#else
+#import "RCTTextAttributes.h"
+#endif
 
 #import <React/RCTUtils.h>
 
