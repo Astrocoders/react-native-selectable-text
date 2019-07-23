@@ -60,6 +60,15 @@ public class RNSelectableTextManager extends ReactTextViewManager {
             }
 
             @Override
+            public void onAttachedToWindow() {
+                if (this.isEnabled()) {
+                    this.setEnabled(false);
+                    this.setEnabled(true);
+                }
+                super.onAttachedToWindow();
+            }
+
+            @Override
             protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
                 if (mActionMode != null) {
                     mActionMode.finish();
