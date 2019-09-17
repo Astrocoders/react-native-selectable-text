@@ -109,8 +109,6 @@ export class SelectableText extends React.PureComponent {
               } ] : acc
             }, [])
 
-            console.log({ notHighlightedTexts, highlightsMapped })
-
             return highlightsMapped.concat(notHighlightedTexts).sort((a, b) => a.init - b.init).map(item => (
               <Text
                 key={v4()}
