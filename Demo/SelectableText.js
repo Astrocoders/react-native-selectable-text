@@ -51,7 +51,7 @@ export class SelectableText extends React.PureComponent {
         {R.compose(
           R.map(({ id, highlight, text, isStrike }) => {
             const strikeStyle = isStrike ? strikenTextStyle : {}
-            const highlightStyle = { backgroundColor: props.highlightColor }
+            const highlightStyle = { backgroundColor: props.highlightColor, ...strikeStyle }
 
             const hasHighlights = Array.isArray(highlight) && highlight.length > 0
 
@@ -69,7 +69,7 @@ export class SelectableText extends React.PureComponent {
               )
             }
 
-            const highlightsMapped = highlight.map((item) =>
+            const highlightsMapped = highlight.sort((a, b) => a.start - b.start).map((item) =>
               ({
                 text: text.slice(item.start, item.end + 1),
                 init: item.start,
@@ -78,9 +78,9 @@ export class SelectableText extends React.PureComponent {
               })
             )
 
-            const notHighlightedTexts = highlightsMapped[0].init === 0  && highlightsMapped[0].end === text.length ? [] : highlightsMapped.reduce((acc, item, index) => {
+            const notHighlightedTexts = highlightsMapped[0].init === 0  && highlightsMapped[0].end === text.length ? [] : highlightsMapped.reduce((acc, item, index, array) => {
               const init = index === 0 && item.init !== 0 ?  0 : item.end + 1
-              const end = index < highlightsMapped.length - 1 ? highlightsMapped[index + 1].init - 1 : index === 0 ? item.init - 1 : text.length - 1
+              const end = index < highlightsMapped.length - 1 && index > 0 ? array[index + 1].init - 1 : index === 0 && array.length > 1 ? array[index + 1].init - 1 : text.length - 1
 
               if (index == highlightsMapped.length - 1 && end < text.length - 1) {
                 const initLastElement = item.end + 1
@@ -101,20 +101,22 @@ export class SelectableText extends React.PureComponent {
                   } ]
               }
 
-              return [ ...acc, {
+              return text.slice(init, end + 1).length > 0 ? [ ...acc, {
                 text: text.slice(init, end + 1),
                 init,
                 end,
                 isHighlight: false,
-              } ]
+              } ] : acc
             }, [])
+
+            console.log({ notHighlightedTexts, highlightsMapped })
 
             return highlightsMapped.concat(notHighlightedTexts).sort((a, b) => a.init - b.init).map(item => (
               <Text
                 key={v4()}
                 selectable
                 style={
-                  item.isHighlight ? { ...highlightStyle, ...strikeStyle } : strikeStyle
+                  item.isHighlight ? highlightStyle : strikeStyle
                 }
               >
                 {item.text}
