@@ -80,7 +80,7 @@ export class SelectableText extends React.PureComponent {
 
             const notHighlightedTexts = highlightsMapped[0].init === 0  && highlightsMapped[0].end === text.length ? [] : highlightsMapped.reduce((acc, item, index, array) => {
               const init = index === 0 && item.init !== 0 ?  0 : item.end + 1
-              const end = index < highlightsMapped.length - 1 && index > 0 ? array[index + 1].init - 1 : index === 0 && array.length > 1 ? array[index + 1].init - 1 : text.length - 1
+              const end = index < highlightsMapped.length - 1 && index > 0 ? array[index + 1].init - 1 : index === 0 && array.length > 1 ? array[index + 1].init - 1 : index === 0 && index === array.length - 1 && init === 0 ? item.init - 1 : text.length - 1
 
               if (index == highlightsMapped.length - 1 && end < text.length - 1) {
                 const initLastElement = item.end + 1
