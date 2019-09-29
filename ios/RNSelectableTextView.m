@@ -277,7 +277,7 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         for (UIView *subview in self.subviews.reverseObjectEnumerator) {
             CGPoint subPoint = [subview convertPoint:point toView:self];
             UIView *result = [subview hitTest:subPoint withEvent:event];
-            
+
             if (!result.isFirstResponder) {
                 NSString *name = NSStringFromClass([result class]);
 
