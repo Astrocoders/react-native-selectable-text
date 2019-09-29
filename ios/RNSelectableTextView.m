@@ -272,6 +272,26 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
 {
     if (!_backedTextInputView.isFirstResponder) {
         [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
+    } else {
+        UIView *sub = nil;
+        for (UIView *subview in self.subviews.reverseObjectEnumerator) {
+            CGPoint subPoint = [subview convertPoint:point toView:self];
+            UIView *result = [subview hitTest:subPoint withEvent:event];
+            
+            NSLog(@"%@", result.class);
+            
+            if (!result.isFirstResponder) {
+                NSString *name = NSStringFromClass([result class]);
+
+                if ([name isEqual:@"UITextRangeView"]) {
+                    sub = result;
+                }
+            }
+        }
+        
+        if (sub == nil) {
+            [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
+        }
     }
 
     return [super hitTest:point withEvent:event];
