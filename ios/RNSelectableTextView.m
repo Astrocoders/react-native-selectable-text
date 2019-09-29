@@ -234,8 +234,6 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
             CGPoint subPoint = [subview convertPoint:point toView:self];
             UIView *result = [subview hitTest:subPoint withEvent:event];
             
-            NSLog(@"%@", result.class);
-            
             if (!result.isFirstResponder) {
                 NSString *name = NSStringFromClass([result class]);
 
