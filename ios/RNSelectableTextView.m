@@ -270,7 +270,10 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
-    [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
+    if (!_backedTextInputView.isFirstResponder) {
+        [_backedTextInputView setSelectedTextRange:nil notifyDelegate:true];
+    }
+
     return [super hitTest:point withEvent:event];
 }
 

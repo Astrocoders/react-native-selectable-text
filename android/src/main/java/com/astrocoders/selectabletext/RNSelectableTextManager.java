@@ -113,12 +113,10 @@ public class RNSelectableTextManager extends ReactTextViewManager {
                     }
                     int offset = textView.getOffsetForPosition(x, y);
 
-                    Log.d("TOUCH",  String.valueOf(offset));
                     for (int i = 0; i < highlights.size(); i++) {
                         final ReadableMap currentItem = highlights.getMap(i);
                         if (offset >= currentItem.getInt("start") && offset <= currentItem.getInt("end")) {
                             clickedHighlightId = currentItem.getString("id");
-                            Log.d("HIGHLIGHT ID", clickedHighlightId);
                             textView.startActionMode(new Callback() {
                                 @Override
                                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -176,18 +174,17 @@ public class RNSelectableTextManager extends ReactTextViewManager {
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                 // Called when action mode is first created. The menu supplied
                 // will be used to generate action buttons for the action mode
-                menu.removeItem(android.R.id.copy);
-                menu.removeItem(android.R.id.shareText);
-                menu.removeItem(android.R.id.selectAll);
-
+                // Android Smart Linkify feature pushes extra options into the menu
+                // and would override the generated menu items
+                menu.clear();
+                for (int i = 0; i < menuItems.length; i++) {
+                  menu.add(0, i, 0, menuItems[i]);
+                }
                 return true;
             }
 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                for (int i = 0; i < menuItems.length; i++) {
-                    menu.add(0, i, 0, menuItems[i]);
-                }
                 return true;
             }
 
