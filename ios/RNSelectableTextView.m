@@ -303,7 +303,7 @@ NSString *const CUSTOM_SELECTOR = @"_CUSTOM_SELECTOR_";
         NSInteger highlightStart = [[cur objectForKey:@"start"] integerValue];
         NSInteger highlightEnd = [[cur objectForKey:@"end"] integerValue];
         
-        if (highlightStart == start && highlightEnd == end) {
+        if (highlightStart == start || highlightEnd == end) {
             highlightId = [cur objectForKey:@"id"];
             break;
         }
