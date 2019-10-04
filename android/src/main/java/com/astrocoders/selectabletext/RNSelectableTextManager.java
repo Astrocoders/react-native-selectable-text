@@ -1,7 +1,7 @@
 package com.astrocoders.selectabletext;
 
 import android.graphics.Rect;
-import android.util.Log;
+import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ActionMode;
@@ -25,11 +25,9 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.views.text.ReactTextView;
 import com.facebook.react.views.text.ReactTextViewManager;
-import com.facebook.react.views.text.ReactTextUpdate;
 
 import java.util.List;
 import java.util.ArrayList;
-
 
 public class RNSelectableTextManager extends ReactTextViewManager {
     public static final String REACT_CLASS = "RNSelectableText";
@@ -46,25 +44,13 @@ public class RNSelectableTextManager extends ReactTextViewManager {
     @Override
     public ReactTextView createViewInstance(ThemedReactContext context) {
         ReactTextView view = new ReactTextView(context) {
-            private Spannable mSpanned;
-
-            @Override
-            public void setText(ReactTextUpdate update) {
-                this.mSpanned = update.getText();
-                super.setText(update);
-            }
-
-            @Override
-            public Spannable getSpanned() {
-                return this.mSpanned;
-            }
-
             @Override
             public void onAttachedToWindow() {
                 if (this.isEnabled()) {
                     this.setEnabled(false);
                     this.setEnabled(true);
                 }
+
                 super.onAttachedToWindow();
             }
 
@@ -117,7 +103,8 @@ public class RNSelectableTextManager extends ReactTextViewManager {
                         final ReadableMap currentItem = highlights.getMap(i);
                         if (offset >= currentItem.getInt("start") && offset <= currentItem.getInt("end")) {
                             clickedHighlightId = currentItem.getString("id");
-                            textView.startActionMode(new Callback() {
+
+                            Callback cb = new Callback() {
                                 @Override
                                 public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                                     mActionMode = mode;
@@ -157,7 +144,14 @@ public class RNSelectableTextManager extends ReactTextViewManager {
                                 public void onDestroyActionMode(ActionMode mode) {
                                     mActionMode = null;
                                 }
-                            }, ActionMode.TYPE_FLOATING);
+                            };
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                textView.startActionMode(cb, ActionMode.TYPE_FLOATING);
+                            } else {
+                                textView.startActionMode(cb);
+                            }
+
                             break;
                         }
                     }
