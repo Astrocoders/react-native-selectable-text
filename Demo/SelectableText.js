@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, requireNativeComponent, Platform } from 'react-native'
+import { Text, requireNativeComponent } from 'react-native'
 import { v4 } from 'uuid'
 import * as R from 'ramda'
 import memoize from 'fast-memoize'
@@ -10,7 +10,8 @@ const combineHighlights = memoize(numbers => {
   return numbers
     .sort((a, b) => a.start - b.start || a.end - b.end)
     .reduce(function(combined, next) {
-      if (!combined.length || combined[combined.length - 1].end < next.start) combined.push(next)
+      if (!combined.length || combined[combined.length - 1].end < next.start)
+        combined.push(next)
       else {
         var prev = combined.pop()
         combined.push({
@@ -30,9 +31,12 @@ const combineHighlights = memoize(numbers => {
 const mapHighlightsRanges = (value, highlights) => {
   const combinedHighlights = combineHighlights(highlights)
 
-  if (combinedHighlights.length === 0) return [{ isHighlight: false, text: value }]
+  if (combinedHighlights.length === 0)
+    return [{ isHighlight: false, text: value }]
 
-  const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start) }]
+  const data = [
+    { isHighlight: false, text: value.slice(0, combinedHighlights[0].start) },
+  ]
 
   combinedHighlights.forEach(({ start, end }, idx) => {
     data.push({
@@ -50,7 +54,10 @@ const mapHighlightsRanges = (value, highlights) => {
 
   data.push({
     isHighlight: false,
-    text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
+    text: value.slice(
+      combinedHighlights[combinedHighlights.length - 1].end,
+      value.length
+    ),
   })
 
   return data.filter(x => x.text)
@@ -71,7 +78,15 @@ export class SelectableText extends React.PureComponent {
     this.ref = React.createRef()
   }
 
-  onSelectionNative = ({ nativeEvent: { content, eventType, selectionStart, selectionEnd, highlightId } }) => {
+  onSelectionNative = ({
+    nativeEvent: {
+      content,
+      eventType,
+      selectionStart,
+      selectionEnd,
+      highlightId,
+    },
+  }) => {
     if (this.props.onSelection) {
       this.props.onSelection({
         content,
@@ -84,7 +99,14 @@ export class SelectableText extends React.PureComponent {
   }
 
   render() {
-    const { onSelection, onHighlightPress, value, strikenTextStyle, children, ...props } = this.props
+    const {
+      onSelection,
+      onHighlightPress,
+      value,
+      strikenTextStyle,
+      children,
+      ...props
+    } = this.props
 
     return (
       <RNSelectableText
@@ -94,32 +116,39 @@ export class SelectableText extends React.PureComponent {
         highlights={props.highlights || []}
         ref={this.ref}
       >
-        {R.compose(
-          R.map(({ highlight, text, isStrike }) => {
-            const strikeStyle = isStrike ? strikenTextStyle : {}
-            const highlightStyle = {
-              backgroundColor: props.highlightColor,
-              ...strikeStyle,
-            }
+        <Text selectable key={v4()}>
+          {R.compose(
+            R.map(({ highlight, text, isStrike }) => {
+              const strikeStyle = isStrike ? strikenTextStyle : {}
+              const highlightStyle = {
+                backgroundColor: props.highlightColor,
+                ...strikeStyle,
+              }
 
-            const hasHighlights = Array.isArray(highlight) && highlight.length > 0
+              const hasHighlights =
+                Array.isArray(highlight) && highlight.length > 0
 
-            if (!hasHighlights) {
-              return (
-                <Text key={v4()} selectable style={strikeStyle}>
-                  {text}
+              if (!hasHighlights) {
+                return (
+                  <Text key={v4()} selectable style={strikeStyle}>
+                    {text}
+                  </Text>
+                )
+              }
+
+              return mapHighlightsRanges(text, highlight).map(item => (
+                <Text
+                  key={v4()}
+                  selectable
+                  style={item.isHighlight ? highlightStyle : strikeStyle}
+                >
+                  {item.text}
                 </Text>
-              )
-            }
-
-            return mapHighlightsRanges(text, highlight).map(item => (
-              <Text key={v4()} selectable style={item.isHighlight ? highlightStyle : strikeStyle}>
-                {item.text}
-              </Text>
-            ))
-          }),
-          R.flatten,
-        )(value)}
+              ))
+            }),
+            R.flatten
+          )(value)}
+        </Text>
         {props.appendToChildren ? props.appendToChildren : null}
       </RNSelectableText>
     )
