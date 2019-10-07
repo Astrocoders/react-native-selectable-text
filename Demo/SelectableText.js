@@ -71,11 +71,19 @@ const mapHighlightsRanges = (value, highlights) => {
  * highlights: array({ id, start, end })
  * highlightColor: string
  */
-export class SelectableText extends React.PureComponent {
+export class SelectableText extends React.Component {
   constructor(props) {
     super(props)
 
     this.ref = React.createRef()
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return (
+      !R.equals(nextProps.highlights, this.props.highlights) ||
+      !R.equals(nextProps.value, this.props.value) ||
+      nextProps.appendToChildren !== this.props.appendToChildren
+    )
   }
 
   onSelectionNative = ({
