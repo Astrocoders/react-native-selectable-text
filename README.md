@@ -14,7 +14,7 @@
 ## Usage
 
 ```javascript
-import { SelectableText } from "react-native-selectable-text";
+import { SelectableText } from "@astrocoders/react-native-selectable-text";
 
 // Use normally, it is a drop-in replacement for react-native/Text
 <SelectableText
