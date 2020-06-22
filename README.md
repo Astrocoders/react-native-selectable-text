@@ -81,3 +81,7 @@ import { SelectableText } from "@astrocoders/react-native-selectable-text";
 | **highlightColor** | highlight color |string | null |
 | **onHighlightPress** | called when the user taps the highlight  |(id: string) => void | () => {} |
 | **appendToChildren** | element to be added in the last line of text | ReactNode | null |
+| **TextComponent** | Text component used to render `value` | ReactNode | <Text> |
+| **textValueProp** | text value prop for TextComponent. Should be used when passing TextComponent. Defaults to 'children' which works for <Text> | string | 'children' |
+| **textComponentProps** | additional props to pass to TextComponent | object | null |
+

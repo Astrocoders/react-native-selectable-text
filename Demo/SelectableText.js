@@ -66,8 +66,17 @@ const mapHighlightsRanges = (value, highlights) => {
  * highlights: array({ id, start, end })
  * highlightColor: string
  * onHighlightPress: string => void
+ * textValueProp: string
+ * TextComponent: ReactNode
+ * textComponentProps: object
  */
-export const SelectableText = ({ onSelection, onHighlightPress, value, children, ...props }) => {
+export const SelectableText = ({
+  onSelection, onHighlightPress, textValueProp, value, TextComponent,
+  textComponentProps, ...props
+}) => {
+  const usesTextComponent = !TextComponent;
+  TextComponent = TextComponent || Text;
+  textValueProp = textValueProp || 'children';  // default to `children` which will render `value` as a child of `TextComponent`
   const onSelectionNative = ({
     nativeEvent: { content, eventType, selectionStart, selectionEnd },
   }) => {
@@ -92,6 +101,37 @@ export const SelectableText = ({ onSelection, onHighlightPress, value, children,
       : onHighlightPress
     : () => {}
 
+  // highlights feature is only supported if `TextComponent == Text`
+  let textValue = value;
+  if (usesTextComponent) {
+    textValue = (
+      props.highlights && props.highlights.length > 0
+        ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
+            <Text
+              key={v4()}
+              selectable
+              style={
+                isHighlight
+                  ? {
+                      backgroundColor: props.highlightColor,
+                    }
+                  : {}
+              }
+              onPress={() => {
+                if (isHighlight) {
+                  onHighlightPress && onHighlightPress(id)
+                }
+              }}
+            >
+              {text}
+            </Text>
+          ))
+      : [value]
+    );
+    if (props.appendToChildren) {
+      textValue.push(props.appendToChildren);
+    }
+  }
   return (
     <RNSelectableText
       {...props}
@@ -99,31 +139,10 @@ export const SelectableText = ({ onSelection, onHighlightPress, value, children,
       selectable
       onSelection={onSelectionNative}
     >
-      <Text selectable key={v4()}>
-        {props.highlights && props.highlights.length > 0
-          ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
-              <Text
-                key={v4()}
-                selectable
-                style={
-                  isHighlight
-                    ? {
-                        backgroundColor: props.highlightColor,
-                      }
-                    : {}
-                }
-                onPress={() => {
-                  if (isHighlight) {
-                    onHighlightPress && onHighlightPress(id)
-                  }
-                }}
-              >
-                {text}
-              </Text>
-            ))
-          : value}
-        {props.appendToChildren ? props.appendToChildren : null}
-      </Text>
+      <TextComponent
+        key={v4()}
+        {...{[textValueProp]: textValue, ...textComponentProps}}
+      />
     </RNSelectableText>
   )
 }
