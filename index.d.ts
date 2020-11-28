@@ -14,6 +14,7 @@ export interface SelectableTextProps {
   highlights?: Array<{ id: string; start: number; end: number }>;
   highlightColor?: string;
   style?: StyleProp<TextStyle>;
+  highlightedTextStyle?: StyleProp<TextStyle>;
   onHighlightPress?: (id: string) => void;
   appendToChildren?: ReactNode;
   TextComponent?: ReactNode;
