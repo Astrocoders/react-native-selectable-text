@@ -112,9 +112,9 @@ export const SelectableText = ({
               selectable
               style={
                 isHighlight
-                  ? {
+                  ? [{
                       backgroundColor: props.highlightColor,
-                    }
+                    }, props.highlightedTextStyle]
                   : {}
               }
               onPress={() => {
