@@ -6,7 +6,7 @@ import memoize from 'fast-memoize'
 const RNSelectableText = requireNativeComponent('RNSelectableText')
 
 /**
- * numbers: array({start: int, end: int, id: string})
+ * numbers: array({start: int, end: int, id: string, highlightColor: string})
  */
 const combineHighlights = memoize(numbers => {
   return numbers
@@ -19,6 +19,7 @@ const combineHighlights = memoize(numbers => {
           start: prev.start,
           end: Math.max(prev.end, next.end),
           id: next.id,
+          highlightColor: prev.highlightColor
         })
       }
       return combined
@@ -27,7 +28,7 @@ const combineHighlights = memoize(numbers => {
 
 /**
  * value: string
- * highlights: array({start: int, end: int, id: any})
+ * highlights: array({start: int, end: int, id: any, highlightColor: string})
  */
 const mapHighlightsRanges = (value, highlights) => {
   const combinedHighlights = combineHighlights(highlights)
@@ -36,16 +37,18 @@ const mapHighlightsRanges = (value, highlights) => {
 
   const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start) }]
 
-  combinedHighlights.forEach(({ start, end }, idx) => {
+  combinedHighlights.forEach(({ start, end, highlightColor }, idx) => {
     data.push({
       isHighlight: true,
       text: value.slice(start, end),
+      highlightColor: highlightColor,
     })
 
     if (combinedHighlights[idx + 1]) {
       data.push({
         isHighlight: false,
         text: value.slice(end, combinedHighlights[idx + 1].start),
+        highlightColor: '',
       })
     }
   })
@@ -53,6 +56,7 @@ const mapHighlightsRanges = (value, highlights) => {
   data.push({
     isHighlight: false,
     text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
+    highlightColor: '',
   })
 
   return data.filter(x => x.text)
@@ -106,14 +110,14 @@ export const SelectableText = ({
   if (usesTextComponent) {
     textValue = (
       props.highlights && props.highlights.length > 0
-        ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text }) => (
+        ? mapHighlightsRanges(value, props.highlights).map(({ id, isHighlight, text, highlightColor }) => (
             <Text
               key={v4()}
               selectable
               style={
                 isHighlight
                   ? {
-                      backgroundColor: props.highlightColor,
+                      backgroundColor: highlightColor != '' ? highlightColor : props.highlightColor,
                     }
                   : {}
               }
