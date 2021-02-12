@@ -19,7 +19,7 @@ import { SelectableText } from "@astrocoders/react-native-selectable-text";
 // Use normally, it is a drop-in replacement for react-native/Text
 <SelectableText
   menuItems={["Foo", "Bar"]}
-  /* 
+  /*
     Called when the user taps in a item of the selection menu:
     - eventType: (string) is the label
     - content: (string) the selected text portion
@@ -77,11 +77,10 @@ import { SelectableText } from "@astrocoders/react-native-selectable-text";
 | **onSelection** | Called when the user taps in a item of the selection menu | ({ eventType: string, content: string, selectionStart: int, selectionEnd: int }) => void | () => {} |
 | **menuItems** | context menu items | array(string) | [] |
 | **style** | additional styles to be applied to text | Object | null |
-| **highlights** | array of text ranges that should be highlighted with an optional id | array({ id: string, start: int, end: int }) | [] |
-| **highlightColor** | highlight color |string | null |
+| **highlightColor** | global highlight color |string | null |
+| **highlights** | array of text ranges that should be highlighted with an optional id and a optional highlightColor that overrides the global one | array({ id: string, start: int, end: int, highlightColor: string }) | [] |
 | **onHighlightPress** | called when the user taps the highlight  |(id: string) => void | () => {} |
 | **appendToChildren** | element to be added in the last line of text | ReactNode | null |
 | **TextComponent** | Text component used to render `value` | ReactNode | <Text> |
 | **textValueProp** | text value prop for TextComponent. Should be used when passing TextComponent. Defaults to 'children' which works for <Text> | string | 'children' |
 | **textComponentProps** | additional props to pass to TextComponent | object | null |
-

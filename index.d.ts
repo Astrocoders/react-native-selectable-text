@@ -11,7 +11,7 @@ export interface SelectableTextProps {
   }) => void;
 
   menuItems?: string[];
-  highlights?: Array<{ id: string; start: number; end: number }>;
+  highlights?: Array<{ id: string; start: number; end: number; highlightColor: string }>;
   highlightColor?: string;
   style?: StyleProp<TextStyle>;
   onHighlightPress?: (id: string) => void;
