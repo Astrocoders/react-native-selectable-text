@@ -36,16 +36,18 @@ const mapHighlightsRanges = (value, highlights) => {
 
   const data = [{ isHighlight: false, text: value.slice(0, combinedHighlights[0].start) }]
 
-  combinedHighlights.forEach(({ start, end }, idx) => {
+  combinedHighlights.forEach(({ start, end, id }, idx) => {
     data.push({
       isHighlight: true,
       text: value.slice(start, end),
+      id
     })
 
     if (combinedHighlights[idx + 1]) {
       data.push({
         isHighlight: false,
         text: value.slice(end, combinedHighlights[idx + 1].start),
+        id: undefined
       })
     }
   })
@@ -53,6 +55,7 @@ const mapHighlightsRanges = (value, highlights) => {
   data.push({
     isHighlight: false,
     text: value.slice(combinedHighlights[combinedHighlights.length - 1].end, value.length),
+    id: undefined
   })
 
   return data.filter(x => x.text)
